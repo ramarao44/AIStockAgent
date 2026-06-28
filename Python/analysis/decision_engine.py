@@ -1,5 +1,15 @@
+"""
+Decision engine for final BUY/SELL/HOLD recommendations.
+
+This module is the decision layer from the high-level design. It combines the
+signals from the technical and fundamental modules into a simple, explainable
+recommendation.
+"""
+
+
 class DecisionEngine:
     def generate_decision(self, technical: dict, fundamental: dict, risk: dict):
+        """Create a simple recommendation with confidence and reasoning."""
         score = 0
         reasoning = []
 
@@ -8,6 +18,7 @@ class DecisionEngine:
         fundamental_score = int(fundamental.get("score", 0) or 0)
         risk_level = risk.get("risk_level", "medium")
 
+        # Favor bullish behavior and penalize bearish conditions.
         if trend == "bullish":
             score += 2
             reasoning.append("Bullish short-term trend")

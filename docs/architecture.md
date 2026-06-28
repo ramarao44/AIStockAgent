@@ -309,3 +309,24 @@ Structured JSON outputs only
 Event-driven automation
 Risk-first decision making
 Multi-timeframe analysis
+
+🧩 12. Current Implementation Mapping
+The repository currently implements a lightweight version of the architecture above.
+
+Flow:
+1. Input layer
+   - [Python/services/watchlist_service.py](../Python/services/watchlist_service.py) reads a local watchlist.
+   - [api/app.py](../api/app.py) accepts HTTP requests for on-demand analysis.
+2. Data layer
+   - [Python/data_sources/yahoo.py](../Python/data_sources/yahoo.py) fetches stock history from Yahoo Finance.
+   - [Python/services/market_data_service.py](../Python/services/market_data_service.py) normalizes the data for the analysis modules.
+3. Analysis layer
+   - [Python/analysis/techincal_analysis.py](../Python/analysis/techincal_analysis.py) computes simple technical signals.
+   - [Python/analysis/fundamental_analysis.py](../Python/analysis/fundamental_analysis.py) creates a basic fundamental score.
+   - [Python/analysis/decision_engine.py](../Python/analysis/decision_engine.py) converts those signals into BUY/SELL/HOLD output.
+4. Delivery layer
+   - [Python/main.py](../Python/main.py) runs the pipeline from the terminal.
+   - [n8n/workflow.json](../n8n/workflow.json) wires the analysis into scheduled automation.
+   - [Python/integrations/whatsapp.py](../Python/integrations/whatsapp.py) provides the outbound WhatsApp helper.
+
+This modular structure keeps each layer easy to extend: the input source can change, the data provider can be swapped, the analysis can become more advanced, and the delivery channel can expand to new interfaces.

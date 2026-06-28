@@ -1,3 +1,11 @@
+"""
+Local input layer for the stock watchlist.
+
+This service reads symbols from a plain-text file and provides them to the
+analysis pipeline. In the high-level design, this is the configuration/input
+layer that feeds the engine.
+"""
+
 from pathlib import Path
 
 
@@ -11,6 +19,7 @@ class WatchlistService:
             self.file_path = (Path(__file__).resolve().parents[1] / self.file_path).resolve()
 
     def get_symbols(self):
+        """Read and return the non-empty symbols listed in the watchlist file."""
         symbols = []
         try:
             with self.file_path.open("r", encoding="utf-8") as file:

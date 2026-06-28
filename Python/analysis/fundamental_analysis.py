@@ -1,8 +1,15 @@
+"""
+Basic fundamental scoring helpers.
+
+This module represents the fundamental-analysis step in the high-level design.
+The current implementation uses lightweight heuristics to keep the project
+free and simple while still producing a meaningful signal.
+"""
+
+
 class FundamentalAnalysis:
     def score_basic(self, market_data: dict):
-        """
-        Very basic scoring logic (placeholder for real fundamentals).
-        """
+        """Return a lightweight fundamental score from price and volume heuristics."""
         if not market_data:
             return 0
 
@@ -11,6 +18,7 @@ class FundamentalAnalysis:
 
         score = 0
 
+        # Simple heuristics to approximate a basic quality signal.
         if price > 100:
             score += 1
         if price > 200:
