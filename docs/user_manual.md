@@ -92,7 +92,7 @@ The workflow will call the local analysis API and return a simple AIStockAgent r
 - If the API does not start, confirm that all requirements are installed
 - If the webhook does not receive traffic, confirm that ngrok is running and that the callback URL matches exactly
 - If WhatsApp messages do not send, verify the token, phone number ID, and recipient number
-- If n8n cannot reach the local API, replace `http://127.0.0.1:8000/analyze-stock` with the public URL of your tunnel
+- If n8n cannot reach the local API, replace `http://127.0.0.1:8001/analyze-stock` with the public URL of your tunnel
 
 ## 6. Run the automated tests
 ```powershell
