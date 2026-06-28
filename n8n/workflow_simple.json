@@ -3,19 +3,22 @@
   "nodes": [
     {
       "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-stock-chat",
+        "responseMode": "onReceived",
         "options": {
-          "public": true
+          "responseData": ""
         }
       },
       "id": "chat-trigger",
-      "name": "Chat Trigger",
-      "type": "n8n-nodes-base.chatTrigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
       "position": [260, 300]
     },
     {
       "parameters": {
-        "jsCode": "const input = ($json.message || $json.chatInput || '').toString().trim();\nconst symbol = input || 'RELIANCE.NS';\nreturn [{ json: { symbol, input } }];"
+        "jsCode": "const payload = $json.body && typeof $json.body === 'object' ? $json.body : $json;\nconst input = (payload.message || payload.chatInput || payload.input || $json.message || $json.chatInput || '').toString().trim();\nconst symbol = input || 'RELIANCE.NS';\nreturn [{ json: { symbol, input } }];"
       },
       "id": "parse-message",
       "name": "Parse Message",
@@ -59,7 +62,7 @@
     }
   ],
   "connections": {
-    "Chat Trigger": {
+    "Webhook Trigger": {
       "main": [
         [
           {
