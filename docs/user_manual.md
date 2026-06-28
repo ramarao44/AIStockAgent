@@ -31,14 +31,14 @@ You should see JSON output for the symbols from your watchlist.
 
 ### Step 4: Start the API server
 ```powershell
-python -m uvicorn api.app:app --host 127.0.0.1 --port 8000
+python -m uvicorn api.app:app --host 127.0.0.1 --port 8001
 ```
 
 ### Step 5: Test the API
 Open another terminal and run:
 ```powershell
-curl http://127.0.0.1:8000/health
-curl -X POST http://127.0.0.1:8000/analyze-stock -H "Content-Type: application/json" -d "{\"symbol\":\"RELIANCE.NS\"}"
+curl http://127.0.0.1:8001/health
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8001/analyze-stock" -ContentType "application/json" -Body '{"symbol":"RELIANCE.NS"}'
 ```
 If the server is running, you should receive a JSON response.
 
@@ -46,7 +46,7 @@ If the server is running, you should receive a JSON response.
 ### Step 1: Expose the local server
 If you want WhatsApp to reach your local webhook, use a tunnel such as ngrok:
 ```powershell
-ngrok http 8000
+ngrok http 8001
 ```
 Copy the forwarded HTTPS URL, for example:
 ```text
@@ -69,32 +69,24 @@ The app will receive the webhook and return a JSON response from the webhook end
 > Note: The current repository includes a starter webhook scaffold. For full production-style replies, wire the recipient number from the incoming webhook payload into the outbound message logic.
 
 ## 4. Test the n8n workflow
-### Step 1: Import the workflow
+### Use the chat workflow in n8n
 - Open n8n
 - Create a new workflow
-- Import the file from [n8n/workflow.json](../n8n/workflow.json)
+- Import the file from [n8n/workflow_simple.json](../n8n/workflow_simple.json)
+- Activate the workflow
+- Open the chat interface from the n8n UI and send a message like:
+  - `RELIANCE.NS`
+  - `TCS.NS`
+  - `AAPL`
 
-### Step 2: Update the placeholders
-The workflow contains placeholder values for:
-- `YOUR_PHONE_NUMBER_ID`
-- `YOUR_WHATSAPP_TOKEN`
-- `YOUR_PHONE_NUMBER`
+The workflow will call the local analysis API and return a simple AIStockAgent reply.
 
-Replace them with your actual WhatsApp Cloud API values.
-
-### Step 3: Run the workflow
-You can either:
-- run the workflow manually from the n8n UI, or
-- wait for the cron trigger to fire
-
-### Step 4: Watch the execution
-In n8n you should see the nodes execute in this order:
-1. Cron
-2. Call FastAPI
-3. Format Message
-4. Send WhatsApp
-
-If the workflow is successful, the message will be sent to your WhatsApp number.
+### Expected execution order
+1. Chat Trigger
+2. Parse Message
+3. Call Stock API
+4. Format Reply
+5. Reply
 
 ## 5. Useful troubleshooting tips
 - If the API does not start, confirm that all requirements are installed

@@ -1,0 +1,109 @@
+{
+  "name": "AIStockAgent n8n Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "public": true
+        }
+      },
+      "id": "chat-trigger",
+      "name": "Chat Trigger",
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = ($json.message || $json.chatInput || '').toString().trim();\nconst symbol = input || 'RELIANCE.NS';\nreturn [{ json: { symbol, input } }];"
+      },
+      "id": "parse-message",
+      "name": "Parse Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8001/analyze-stock",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"symbol\":\"={{$json.symbol}}\"}"
+      },
+      "id": "stock-api",
+      "name": "Call Stock API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [740, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nconst symbol = data.symbol || 'UNKNOWN';\nconst decision = data.decision || 'N/A';\nconst confidence = data.confidence || 'N/A';\nconst reasoning = Array.isArray(data.reasoning) ? data.reasoning.join(' • ') : 'No reasoning available';\nconst response = `AIStockAgent: ${symbol} -> ${decision} (${confidence})\\n${reasoning}`;\nreturn [{ json: { response } }];"
+      },
+      "id": "format-reply",
+      "name": "Format Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [980, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.response}}"
+      },
+      "id": "reply",
+      "name": "Reply",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1220, 300]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Message": {
+      "main": [
+        [
+          {
+            "node": "Call Stock API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Stock API": {
+      "main": [
+        [
+          {
+            "node": "Format Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Reply": {
+      "main": [
+        [
+          {
+            "node": "Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
