@@ -9,16 +9,17 @@ analysis pipeline.
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-from integrations.whatsapp_webhook import router as whatsapp_router
-
-# Allow imports from the Python package directory when the app is run directly.
+# Allow imports from the Python package directory before the app imports its
+# internal modules. This is required when uvicorn loads the app from the
+# project root or a clean Python process.
 PYTHON_ROOT = Path(__file__).resolve().parent.parent / "Python"
 if str(PYTHON_ROOT) not in sys.path:
     sys.path.insert(0, str(PYTHON_ROOT))
 
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+from integrations.whatsapp_webhook import router as whatsapp_router
 from services.market_data_service import MarketDataService
 from analysis.techincal_analysis import TechnicalAnalysis
 from analysis.fundamental_analysis import FundamentalAnalysis

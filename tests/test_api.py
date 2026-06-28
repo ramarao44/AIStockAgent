@@ -1,3 +1,4 @@
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -13,6 +14,17 @@ from api.app import app
 
 
 class ApiTests(unittest.TestCase):
+    def test_module_imports_in_clean_process(self):
+        result = subprocess.run(
+            [sys.executable, "-c", "import api.app"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+
     def test_health_endpoint(self):
         client = TestClient(app)
         response = client.get("/health")
