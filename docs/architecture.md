@@ -326,7 +326,7 @@ Flow:
    - [Python/analysis/decision_engine.py](../Python/analysis/decision_engine.py) converts those signals into BUY/SELL/HOLD output.
 4. Delivery layer
    - [Python/main.py](../Python/main.py) runs the pipeline from the terminal.
-   - [n8n/workflow.json](../n8n/workflow.json) wires the analysis into scheduled automation.
+   - [n8n/workflow_simple.json](../n8n/workflow_simple.json) provides the current n8n chat workflow.
    - [Python/integrations/whatsapp.py](../Python/integrations/whatsapp.py) provides the outbound WhatsApp helper.
 
 This modular structure keeps each layer easy to extend: the input source can change, the data provider can be swapped, the analysis can become more advanced, and the delivery channel can expand to new interfaces.

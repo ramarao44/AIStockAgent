@@ -71,8 +71,7 @@ The app will receive the webhook and return a JSON response from the webhook end
 ## 4. Test the n8n workflow
 ### Use the chat workflow in n8n
 - Open n8n
-- Create a new workflow
-- Import the file from [n8n/workflow_simple.json](../n8n/workflow_simple.json)
+- Import only the single workflow file [n8n/workflow_simple.json](../n8n/workflow_simple.json)
 - Activate the workflow
 - Open the chat interface from the n8n UI and send a message like:
   - `RELIANCE.NS`
